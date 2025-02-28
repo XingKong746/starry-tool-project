@@ -11,9 +11,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/starry-core" />
             <option value="$PROJECT_DIR$/starry-mail" />
-            <option value="$PROJECT_DIR$/starry-mail-spring-boot-starter" />
+            <option value="$PROJECT_DIR$/starry-mail/starry-mail-spring-boot-starter" />
             <option value="$PROJECT_DIR$/starry-tool" />
-            <option value="$PROJECT_DIR$/starry-tool-spring-boot-starter" />
+            <option value="$PROJECT_DIR$/starry-tool/starry-tool-spring-boot-starter" />
           </set>
         </option>
       </GradleProjectSettings>

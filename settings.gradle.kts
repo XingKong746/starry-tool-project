@@ -22,7 +22,8 @@ plugins {
 }
 
 rootProject.name = "starry-tool-project"
-include("starry-tool", "starry-tool-spring-boot-starter")
+
 include("starry-core")
-include("starry-mail", "starry-mail-spring-boot-starter")
+include("starry-tool", "starry-tool:starry-tool-spring-boot-starter")
+include("starry-mail", "starry-mail:starry-mail-spring-boot-starter")
 
