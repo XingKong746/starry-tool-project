@@ -14,6 +14,7 @@ import java.util.*
 /**
  * 邮件工具。
  */
+@Suppress("MemberVisibilityCanBePrivate")
 class MailTools(
     /**
      * 邮件配置。
@@ -72,6 +73,7 @@ class MailTools(
         from: String,
         password: String
     ) : this(host, port, from, password, null)
+
 
     /**
      * 最终获取 [Session] 对象方法。
@@ -203,6 +205,7 @@ class MailTools(
         mimeMessage.saveChanges()
         return mimeMessage
     }
+
 
     /**
      * 最终执行发送方法。
