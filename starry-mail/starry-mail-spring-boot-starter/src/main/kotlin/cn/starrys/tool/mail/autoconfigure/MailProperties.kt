@@ -1,13 +1,14 @@
 package cn.starrys.tool.mail.autoconfigure
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.bind.ConstructorBinding
 import java.nio.charset.Charset
 
 /**
  * 邮件配置。
  */
 @ConfigurationProperties(prefix = MailProperties.PROPERTIES_PREFIX)
-data class MailProperties(
+data class MailProperties @ConstructorBinding constructor(
     /**
      * 主机。
      */

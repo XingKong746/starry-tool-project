@@ -1,5 +1,6 @@
 plugins {
-    kotlin("kapt") // = id("org.jetbrains.kotlin.kapt")
+    kotlin("kapt")
+    alias(libs.plugins.kotlin.plugin.spring)
 }
 
 version = "0.0.1"
@@ -9,4 +10,5 @@ dependencies {
     api(project(":starry-mail"))
     implementation(libs.spring.boot.autoconfigure)
     kapt(libs.spring.boot.configuration.processor)
+    implementation(kotlin("reflect"))
 }
