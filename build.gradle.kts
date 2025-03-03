@@ -19,7 +19,13 @@ allprojects {
     kotlin {
         // Apply a specific Java toolchain to ease working on different environments.
         jvmToolchain(17)
-        compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict") }
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-Xjsr305=strict",
+                // 强制所有Kotlin接口的默认方法生成Java8的default方法
+                "-Xjvm-default=all",
+            )
+        }
     }
 
     configurations.compileOnly { extendsFrom(configurations.annotationProcessor.get()) }
