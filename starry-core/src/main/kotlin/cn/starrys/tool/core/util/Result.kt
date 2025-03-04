@@ -17,7 +17,8 @@ import java.time.Instant
  * @property data 响应数据主体
  * @property timestamp 响应生成时间戳（默认当前时间）
  */
-@Suppress("DataClassPrivateConstructor", "MemberVisibilityCanBePrivate")
+@ConsistentCopyVisibility
+@Suppress("MemberVisibilityCanBePrivate")
 data class Result<T> private constructor(
     /**
      * 状态码
