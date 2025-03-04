@@ -2,6 +2,7 @@ package cn.starrys.tool.mail
 
 import java.util.*
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -16,7 +17,8 @@ class MailToolsTest() {
         props = properties
     }
 
-    // @Test
+    @Test
+    @Ignore("依据需要使用")
     fun sendTest() {
         val from = props.getProperty("from")
         val password = props.getProperty("password")

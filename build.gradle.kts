@@ -16,6 +16,17 @@ allprojects {
     version = "0.1-SNAPSHOT"
     description = "星空工具"
 
+    sourceSets {
+        main {
+            java.srcDirs("src/main/java", "src/main/kotlin")
+            kotlin.srcDirs("src/main/java", "src/main/kotlin")
+        }
+        test {
+            java.srcDirs("src/test/java", "src/test/kotlin")
+            kotlin.srcDirs("src/test/java", "src/test/kotlin")
+        }
+    }
+
     kotlin {
         // Apply a specific Java toolchain to ease working on different environments.
         jvmToolchain(17)

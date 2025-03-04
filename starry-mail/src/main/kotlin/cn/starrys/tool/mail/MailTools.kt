@@ -21,7 +21,7 @@ class MailTools(
      */
     private val mailProps: MailProps
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(MailTools::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     /**
      * 重载构造。

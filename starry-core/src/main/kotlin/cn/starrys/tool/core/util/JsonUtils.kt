@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
  * Json 工具。
  */
 object JsonUtils {
-    private val logger: Logger = LoggerFactory.getLogger(JsonUtils::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     /**
      * 拆分keyPath
