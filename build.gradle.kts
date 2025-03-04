@@ -68,11 +68,11 @@ subprojects {
             // 描述
             description = project.description
             // 项目主页
-            url = "https://gitee.com/XingKong746/starry-tool"
+            url = "https://gitee.com/XingKong746/starry-tool-project"
             licenses {
                 license {
                     name = "Apache License, Version 2.0"
-                    url = "https://gitee.com/XingKong746/starry-tool/blob/main/LICENSE"
+                    url = "https://gitee.com/XingKong746/starry-tool-project/blob/main/LICENSE"
                 }
             }
             developers {
@@ -84,9 +84,9 @@ subprojects {
             }
             scm {
                 // 版本控制仓库
-                url = "https://gitee.com/XingKong746/starry-tool.git"
-                connection = "scm:git:git://gitee.com/XingKong746/starry-tool.git"
-                developerConnection = "scm:git:ssh://gitee.com/XingKong746/starry-tool.git"
+                url = "https://gitee.com/XingKong746/starry-tool-project.git"
+                connection = "scm:git:git://gitee.com/XingKong746/starry-tool-project.git"
+                developerConnection = "scm:git:ssh://gitee.com/XingKong746/starry-tool-project.git"
             }
         }
     }
