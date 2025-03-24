@@ -1,4 +1,4 @@
-version = "0.0.2"
+version = "1.0.0"
 description = "星空邮件工具"
 
 dependencies {

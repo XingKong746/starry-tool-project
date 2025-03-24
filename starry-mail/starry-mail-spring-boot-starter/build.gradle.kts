@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.plugin.spring)
 }
 
-version = "0.0.2"
+version = "1.0.0"
 description = "星空邮件工具 spring boot starter"
 
 dependencies {
