@@ -23,6 +23,9 @@ class MailTools(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
+    // 缓存发信协议的 Session
+    private val smtpSession: Session by lazy { getSession(MailProtocols.SMTP) }
+
     /**
      * 重载构造。
      *
@@ -76,71 +79,55 @@ class MailTools(
 
 
     /**
-     * 最终获取 [Session] 对象方法。
-     *
-     * @param props properties
-     * @return [Session]对象。
-     */
-    private fun getSession(props: Properties): Session {
-        if (mailProps.auth) {
-            return Session.getDefaultInstance(props, object : Authenticator() {
-                override fun getPasswordAuthentication(): PasswordAuthentication {
-                    return PasswordAuthentication(mailProps.from, mailProps.password)
-                }
-            })
-        }
-        return Session.getDefaultInstance(props)
-    }
-
-    /**
      * 获取 [Session] 对象.
      *
      * @param protocol 指定协议
      * @return [Session]对象。
      */
     fun getSession(protocol: MailProtocols): Session {
-        val properties = Properties()
-
-        when (protocol) {
-            // 接收邮件时分配给协议的名称
-            MailProtocols.POP3 -> properties["mail.store.protocol"] = protocol
-            MailProtocols.IMAP -> {
-                // I don't know x_x
-                properties["mail.store.protocol"] = protocol
-                properties["mail.transport.protocol"] = protocol
+        val properties = Properties().apply {
+            when (protocol) {
+                // 接收邮件时分配给协议的名称
+                MailProtocols.POP3 -> put("mail.store.protocol", protocol)
+                MailProtocols.IMAP -> {
+                    // TODO I don't know x_x
+                    put("mail.transport.protocol", protocol)
+                    put("mail.store.protocol", protocol)
+                }
+                // 发送邮件时分配给协议的名称
+                MailProtocols.SMTP -> put("mail.transport.protocol", protocol)
             }
-            // 发送邮件时分配给协议的名称
-            MailProtocols.SMTP -> properties["mail.transport.protocol"] = protocol
-        }
 
-        // 邮箱服务器地址
-        properties["mail.host"] = mailProps.host
-        // 端口
-        properties["mail.${protocol}.port"] = mailProps.port
-        // 发件邮箱
-        properties["mail.from"] = mailProps.from
-        // 发件邮箱授权码
-        properties["mail.password"] = mailProps.password
-        // 发信昵称
-        mailProps.nickname?.let { properties["mail.user"] = it }
+            // 邮箱服务器地址
+            put("mail.host", mailProps.host)
+            // 端口
+            put("mail.${protocol}.port", mailProps.port)
+            // 发件邮箱
+            put("mail.from", mailProps.from)
+            // 发件邮箱授权码
+            put("mail.password", mailProps.password)
+            // 发信昵称
+            mailProps.nickname?.let { put("mail.user", it) }
 
-        if (mailProps.ssl) {
             // 开启 ssl
-            properties["mail.${protocol}.ssl.enable"] = "true"
-            properties["mail.${protocol}.ssl.socketFactory"] = "javax.net.ssl.SSLSocketFactory"
-        }
+            if (mailProps.ssl) {
+                put("mail.${protocol}.ssl.enable", "true")
+                put("mail.${protocol}.ssl.socketFactory", "javax.net.ssl.SSLSocketFactory")
+            }
 
-        if (mailProps.auth) {
             // 开启鉴权
-            properties["mail.${protocol}.auth"] = "true"
-        }
+            if (mailProps.auth) put("mail.${protocol}.auth", "true")
 
-        if (mailProps.debug) {
             // Debug
-            properties["mail.debug"] = "true"
+            if (mailProps.debug) put("mail.debug", "true")
         }
 
-        return getSession(properties)
+        if (mailProps.auth) return Session.getInstance(properties, object : Authenticator() {
+            override fun getPasswordAuthentication(): PasswordAuthentication {
+                return PasswordAuthentication(mailProps.from, mailProps.password)
+            }
+        })
+        return Session.getInstance(properties)
     }
 
     /**
@@ -149,7 +136,7 @@ class MailTools(
      * @param addresseeList [MailAddressee] 邮件收件人列表。
      * @return [InternetAddress] 对象数组。
      */
-    private fun createInternetAddresses(addresseeList: List<MailAddressee>): Array<InternetAddress> {
+    private fun cia(addresseeList: List<MailAddressee>): Array<InternetAddress> {
         return addresseeList.map { mailAddressee ->
             InternetAddress(
                 mailAddressee.addressee,
@@ -171,11 +158,11 @@ class MailTools(
         // 发件人
         mimeMessage.setFrom(InternetAddress(mailProps.from, mailProps.nickname, mailProps.charset.name()))
         // 收件人
-        mimeMessage.setRecipients(Message.RecipientType.TO, createInternetAddresses(mail.to))
+        mimeMessage.setRecipients(Message.RecipientType.TO, cia(mail.to))
         // 抄送人
-        mail.cc?.let { mimeMessage.setRecipients(Message.RecipientType.CC, createInternetAddresses(it)) }
+        mail.cc?.let { mimeMessage.setRecipients(Message.RecipientType.CC, cia(it)) }
         // 密送人
-        mail.bcc?.let { mimeMessage.setRecipients(Message.RecipientType.BCC, createInternetAddresses(it)) }
+        mail.bcc?.let { mimeMessage.setRecipients(Message.RecipientType.BCC, cia(it)) }
         // 邮件主题
         mimeMessage.setSubject(mail.subject, mailProps.charset.name())
         // 邮件内容
@@ -236,7 +223,7 @@ class MailTools(
      * @return 发送结果。
      */
     fun send(mail: Mail): Boolean {
-        return send(createMimeMessage(getSession(MailProtocols.SMTP), mail))
+        return send(createMimeMessage(smtpSession, mail))
     }
 
     /**
