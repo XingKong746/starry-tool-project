@@ -17,14 +17,14 @@ starry-tool
       <dependency>
           <groupId>cn.starrys.tool</groupId>
           <artifactId>starry-mail</artifactId>
-          <version>0.0.2</version>
+          <version>1.0.0</version>
       </dependency>
       ```
 
     - Gradle
 
       ```groovy
-      implementation("cn.starrys.tool:starry-mail:0.0.2")
+      implementation("cn.starrys.tool:starry-mail:1.0.0")
       ```
 
 2. 演示
@@ -51,14 +51,14 @@ starry-tool
       <dependency>
           <groupId>cn.starrys.tool</groupId>
           <artifactId>starry-mail-spring-boot-starter</artifactId>
-          <version>0.0.2</version>
+          <version>1.0.0</version>
       </dependency>
       ```
 
     - Gradle
 
       ```groovy
-      implementation("cn.starrys.tool:starry-mail-spring-boot-starter:0.0.2")
+      implementation("cn.starrys.tool:starry-mail-spring-boot-starter:1.0.0")
       ```
 
 2. 演示
@@ -99,14 +99,14 @@ starry-tool
       <dependency>
           <groupId>cn.starrys.tool</groupId>
           <artifactId>starry-core</artifactId>
-          <version>0.0.2</version>
+          <version>0.1.0</version>
       </dependency>
       ```
 
     - Gradle
 
       ```groovy
-      implementation("cn.starrys.tool:starry-core:0.0.2")
+      implementation("cn.starrys.tool:starry-core:0.1.0")
       ```
 
 2. 演示
