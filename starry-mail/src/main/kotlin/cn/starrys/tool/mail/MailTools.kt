@@ -21,10 +21,12 @@ class MailTools(
      */
     private val mailProps: MailProps
 ) {
+    // Logger
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     // 缓存发信协议的 Session
     private val smtpSession: Session by lazy { getSession(MailProtocols.SMTP) }
+
 
     /**
      * 重载构造。

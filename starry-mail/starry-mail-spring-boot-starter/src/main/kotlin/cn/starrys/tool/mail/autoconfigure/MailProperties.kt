@@ -52,6 +52,4 @@ data class MailProperties @ConstructorBinding constructor(
          */
         const val PROPERTIES_PREFIX = "starry.mail"
     }
-
-    constructor(host: String, port: Int, from: String, password: String) : this(host, port, from, password, null)
 }
