@@ -51,9 +51,7 @@ data class Result<T> private constructor(
          * @return 完整的[Result]对象
          */
         @JvmStatic
-        fun <T> result(code: Int?, message: String?, data: T?): Result<T> {
-            return Result(code, message, data)
-        }
+        fun <T> result(code: Int?, message: String?, data: T?) = Result(code, message, data)
 
         /**
          * 通过[IResultStatus]状态对象构建结果
@@ -62,9 +60,7 @@ data class Result<T> private constructor(
          * @return 包含状态码和消息的[Result]对象
          */
         @JvmStatic
-        fun <T> result(resultStatus: IResultStatus?, data: T?): Result<T> {
-            return Result(resultStatus?.code, resultStatus?.message, data)
-        }
+        fun <T> result(resultStatus: IResultStatus?, data: T?) = Result(resultStatus?.code, resultStatus?.message, data)
 
         /**
          * 构建带自定义消息的成功响应
@@ -73,9 +69,7 @@ data class Result<T> private constructor(
          * @return 状态码为[ResultStatusEnum.NO_CONTENT.code]的[Result]对象
          */
         @JvmStatic
-        fun <T> success(message: String, data: T): Result<T> {
-            return Result(ResultStatusEnum.OK.code, message, data)
-        }
+        fun <T> success(message: String, data: T) = Result(ResultStatusEnum.OK.code, message, data)
 
         /**
          * 构建仅包含消息的成功响应（无数据）
@@ -83,9 +77,7 @@ data class Result<T> private constructor(
          * @return 状态码为[ResultStatusEnum.NO_CONTENT.code]的[Result]对象
          */
         @JvmStatic
-        fun success(message: String): Result<Unit> {
-            return Result(ResultStatusEnum.NO_CONTENT.code, message, Unit)
-        }
+        fun success(message: String) = Result(ResultStatusEnum.NO_CONTENT.code, message, Unit)
 
         /**
          * 构建带默认消息的数据成功响应
@@ -93,46 +85,36 @@ data class Result<T> private constructor(
          * @return 状态为[ResultStatusEnum.OK]的[Result]对象
          */
         @JvmStatic
-        fun <T> success(data: T): Result<T> {
-            return Result(ResultStatusEnum.OK.code, ResultStatusEnum.OK.message, data)
-        }
+        fun <T> success(data: T) = Result(ResultStatusEnum.OK.code, ResultStatusEnum.OK.message, data)
 
         /**
          * 构建空内容成功响应
          * @return 状态为[ResultStatusEnum.NO_CONTENT]的[Result]对象
          */
         @JvmStatic
-        fun success(): Result<Unit> {
-            return Result(ResultStatusEnum.NO_CONTENT.code, ResultStatusEnum.NO_CONTENT.message, Unit)
-        }
+        fun success() = Result(ResultStatusEnum.NO_CONTENT.code, ResultStatusEnum.NO_CONTENT.message, Unit)
 
         /**
          * 构建带自定义消息的失败响应
-         *
          * @param message 自定义错误消息
          * @return 状态码为[ResultStatusEnum.SERVICE_UNAVAILABLE.code]的[Result]对象
          */
         @JvmStatic
-        fun failure(message: String): Result<Unit> {
-            return Result(ResultStatusEnum.SERVICE_UNAVAILABLE.code, message, Unit)
-        }
+        fun failure(message: String) = Result(ResultStatusEnum.SERVICE_UNAVAILABLE.code, message, Unit)
 
         /**
          * 构建默认失败响应
          * @return 状态为[ResultStatusEnum.SERVICE_UNAVAILABLE]的[Result]对象
          */
         @JvmStatic
-        fun failure(): Result<Unit> {
-            return Result(ResultStatusEnum.SERVICE_UNAVAILABLE.code, ResultStatusEnum.SERVICE_UNAVAILABLE.message, Unit)
-        }
+        fun failure() =
+            Result(ResultStatusEnum.SERVICE_UNAVAILABLE.code, ResultStatusEnum.SERVICE_UNAVAILABLE.message, Unit)
 
         /**
          * 创建空数据Builder实例
          */
         @JvmStatic
-        fun builder(): Builder<Unit> {
-            return Builder(Unit)
-        }
+        fun builder() = Builder(Unit)
 
         /**
          * 创建带初始数据的Builder实例
@@ -140,9 +122,7 @@ data class Result<T> private constructor(
          * @return 初始化后的[Builder]实例
          */
         @JvmStatic
-        fun <T> builder(data: T): Builder<T> {
-            return Builder(data)
-        }
+        fun <T> builder(data: T) = Builder(data)
     }
 
     /**
@@ -157,51 +137,46 @@ data class Result<T> private constructor(
      * ```
      * @property data 构建器持有的数据对象
      */
-    class Builder<T> internal constructor(
-        private var data: T
-    ) {
+    class Builder<T> internal constructor(private var data: T) {
         private var code: Int? = null
         private var message: String? = null
 
         /**
          * 设置状态枚举
-         *
          * @param status 预定义的状态枚举
          * @return 当前Builder实例
          */
-        fun status(status: IResultStatus): Builder<T> = apply {
+        fun status(status: IResultStatus) = apply {
             code = status.code
             message = status.message
         }
 
         /**
          * 自定义状态码
-         *
          * @param code 自定义状态码数值
          * @return 当前Builder实例
          */
-        fun code(code: Int): Builder<T> = apply { this.code = code }
+        fun code(code: Int) = apply { this.code = code }
 
         /**
          * 自定义状态消息
          * @param message 自定义消息内容
          * @return 当前Builder实例
          */
-        fun message(message: String): Builder<T> = apply { this.message = message }
+        fun message(message: String) = apply { this.message = message }
 
         /**
          * 替换数据对象
          * @param data 新的数据对象
          * @return 当前Builder实例
          */
-        fun data(data: T): Builder<T> = apply { this.data = data }
+        fun data(data: T) = apply { this.data = data }
 
         /**
          * 构建最终结果对象
          * @return 配置完成的[Result]对象
          */
-        fun build(): Result<T> {
-            return Result(code, message, data)
-        }
+        fun build() = Result(code, message, data)
     }
+
 }

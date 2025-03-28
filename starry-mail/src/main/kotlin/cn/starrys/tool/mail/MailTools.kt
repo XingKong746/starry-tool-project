@@ -1,6 +1,7 @@
 package cn.starrys.tool.mail
 
-import cn.starrys.tool.mail.entity.*
+import cn.starrys.tool.mail.entity.Mail
+import cn.starrys.tool.mail.entity.MailProps
 import jakarta.mail.*
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeBodyPart
@@ -13,24 +14,20 @@ import java.util.*
 
 /**
  * 邮件工具。
+ * @param mailProps 邮件配置。
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class MailTools(
-    /**
-     * 邮件配置。
-     */
-    private val mailProps: MailProps
-) {
+class MailTools(private val mailProps: MailProps) {
+
     // Logger
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     // 缓存发信协议的 Session
-    private val smtpSession: Session by lazy { getSession(MailProtocols.SMTP) }
+    private val smtpSession: Session by lazy { getSession(MailProps.Protocols.SMTP) }
 
 
     /**
      * 重载构造。
-     *
      * @param host     主机。
      * @param port     主机端口。
      * @param from     发件邮箱。
@@ -38,66 +35,48 @@ class MailTools(
      * @param nickname 昵称。
      * @param ssl      启用 ssl。
      */
-    constructor(
-        host: String,
-        port: Int,
-        from: String,
-        password: String,
-        nickname: String?,
-        ssl: Boolean
-    ) : this(MailProps(host, port, from, password, nickname, ssl, false, Charsets.UTF_8, true))
+    constructor(host: String, port: Int, from: String, password: String, nickname: String?, ssl: Boolean) :
+            this(MailProps(host, port, from, password, nickname, ssl, false, Charsets.UTF_8, true))
 
     /**
      * 重载构造。
-     *
      * @param host     主机。
      * @param port     主机端口。
      * @param from     发件邮箱。
      * @param password 发件邮箱授权码。
      * @param nickname 昵称。
      */
-    constructor(
-        host: String,
-        port: Int,
-        from: String,
-        password: String,
-        nickname: String?
-    ) : this(host, port, from, password, nickname, true)
+    constructor(host: String, port: Int, from: String, password: String, nickname: String?) :
+            this(host, port, from, password, nickname, true)
 
     /**
      * 重载构造。
-     *
      * @param host     主机。
      * @param port     主机端口。
      * @param from     发件邮箱。
      * @param password 发件邮箱授权码。
      */
-    constructor(
-        host: String,
-        port: Int,
-        from: String,
-        password: String
-    ) : this(host, port, from, password, null)
+    constructor(host: String, port: Int, from: String, password: String) :
+            this(host, port, from, password, null)
 
 
     /**
      * 获取 [Session] 对象.
-     *
      * @param protocol 指定协议
      * @return [Session]对象。
      */
-    fun getSession(protocol: MailProtocols): Session {
+    fun getSession(protocol: MailProps.Protocols): Session {
         val properties = Properties().apply {
             when (protocol) {
                 // 接收邮件时分配给协议的名称
-                MailProtocols.POP3 -> put("mail.store.protocol", protocol)
-                MailProtocols.IMAP -> {
+                MailProps.Protocols.POP3 -> put("mail.store.protocol", protocol)
+                MailProps.Protocols.IMAP -> {
                     // TODO I don't know x_x
                     put("mail.transport.protocol", protocol)
                     put("mail.store.protocol", protocol)
                 }
                 // 发送邮件时分配给协议的名称
-                MailProtocols.SMTP -> put("mail.transport.protocol", protocol)
+                MailProps.Protocols.SMTP -> put("mail.transport.protocol", protocol)
             }
 
             // 邮箱服务器地址
@@ -134,23 +113,19 @@ class MailTools(
 
     /**
      * 创建 [InternetAddress] 对象。
-     *
-     * @param addresseeList [MailAddressee] 邮件收件人列表。
+     * @param addresseeList [Mail.Addressee] 邮件收件人列表。
      * @return [InternetAddress] 对象数组。
      */
-    private fun cia(addresseeList: List<MailAddressee>): Array<InternetAddress> {
+    private fun cia(addresseeList: List<Mail.Addressee>): Array<InternetAddress> {
         return addresseeList.map { mailAddressee ->
             InternetAddress(
-                mailAddressee.addressee,
-                mailAddressee.nickname,
-                mailProps.charset.name()
+                mailAddressee.addressee, mailAddressee.nickname, mailProps.charset.name()
             )
         }.toTypedArray()
     }
 
     /**
      * 创建邮件。
-     *
      * @param session [Session]对象。
      * @param mail    [Mail] 邮件内容。
      * @return 一封邮件。
@@ -171,9 +146,9 @@ class MailTools(
         val mimeBodyPart = MimeBodyPart()
         when (mail.type) {
             // text格式
-            MailType.TEXT -> mimeBodyPart.setText(mail.body, mailProps.charset.name())
+            Mail.Type.TEXT -> mimeBodyPart.setText(mail.body, mailProps.charset.name())
             // html格式
-            MailType.HTML -> mimeBodyPart.setContent(mail.body, "text/html;charset=${mailProps.charset.name()}")
+            Mail.Type.HTML -> mimeBodyPart.setContent(mail.body, "text/html;charset=${mailProps.charset.name()}")
         }
         // 邮件体
         val mimeMultipart = MimeMultipart("mixed")
@@ -220,30 +195,24 @@ class MailTools(
 
     /**
      * 发送邮件。
-     *
      * @param mail [Mail] 邮件内容。
      * @return 发送结果。
      */
-    fun send(mail: Mail): Boolean {
-        return send(createMimeMessage(smtpSession, mail))
-    }
+    fun send(mail: Mail) = send(createMimeMessage(smtpSession, mail))
 
     /**
      * 发送邮件。
-     *
      * @param to          收件人(主要收件人)。
      * @param subject     邮件主题（标题）。
      * @param body        邮件内容（主体）。
      * @param attachments 附件。
      * @return 发送结果。
      */
-    fun send(to: List<MailAddressee>, subject: String?, body: String?, attachments: List<File>?): Boolean {
-        return send(Mail(to, null, null, MailType.HTML, subject, body, attachments))
-    }
+    fun send(to: List<Mail.Addressee>, subject: String?, body: String?, attachments: List<File>?) =
+        send(Mail(to, null, null, Mail.Type.HTML, subject, body, attachments))
 
     /**
      * 发送邮件。
-     *
      * @param addressee   收件人。
      * @param nickname    收件者昵称。
      * @param subject     邮件主题（标题）。
@@ -252,33 +221,29 @@ class MailTools(
      * @return 发送结果。
      */
     fun send(addressee: String, nickname: String?, subject: String?, body: String?, attachments: List<File>?): Boolean {
-        val to = ArrayList<MailAddressee>()
-        to.add(MailAddressee(addressee, nickname))
+        val to = ArrayList<Mail.Addressee>()
+        to.add(Mail.Addressee(addressee, nickname))
         return send(to, subject, body, attachments)
     }
 
     /**
      * 发送邮件。
-     *
      * @param addressee 收件人。
      * @param nickname  收件者昵称。
      * @param subject   邮件主题（标题）。
      * @param body      邮件内容（主体）。
      * @return 发送结果。
      */
-    fun send(addressee: String, nickname: String?, subject: String?, body: String?): Boolean {
-        return send(addressee, nickname, subject, body, null)
-    }
+    fun send(addressee: String, nickname: String?, subject: String?, body: String?) =
+        send(addressee, nickname, subject, body, null)
 
     /**
      * 发送邮件。
-     *
      * @param addressee 收件人。
      * @param subject   邮件主题（标题）。
      * @param body      邮件内容（主体）。
      * @return 发送结果。
      */
-    fun send(addressee: String, subject: String?, body: String?): Boolean {
-        return send(addressee, null, subject, body)
-    }
+    fun send(addressee: String, subject: String?, body: String?) = send(addressee, null, subject, body)
+
 }

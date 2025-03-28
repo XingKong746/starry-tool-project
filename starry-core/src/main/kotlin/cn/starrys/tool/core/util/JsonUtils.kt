@@ -13,7 +13,6 @@ object JsonUtils {
 
     /**
      * 拆分keyPath
-     *
      * @param keyPath 节点路径
      * @return 节点数组
      */
@@ -26,7 +25,6 @@ object JsonUtils {
     /**
      * 获取Json串中指定节点的值。<br></br>
      * FastJson2 实现
-     *
      * @param jsonStr Json 字符串
      * @param keyPath 节点路径
      * @param type    转换类型

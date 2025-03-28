@@ -11,14 +11,12 @@ import java.io.Serializable
 interface IResultStatus : Serializable {
     /**
      * 获取状态码。
-     *
      * @return 状态码。
      */
     val code: Int?
 
     /**
      * 获取状态信息。
-     *
      * @return 状态信息。
      */
     val message: String?
@@ -60,13 +58,11 @@ interface IResultStatus : Serializable {
         /**
          * 保留
          */
-        OTHER(6),
-        ;
+        OTHER(6);
 
         companion object {
             /**
              * 将给定的状态码解析为[Series]序列状态。
-             *
              * @param code 要解析的状态码
              * @return 匹配的的 [Series]，如果没有找到，则为`null`
              */
@@ -83,50 +79,44 @@ interface IResultStatus : Serializable {
     /**
      * 根据需求扩展使用。
      * 若要使用请必须重写该方法。
-     *
      * @return 状态系列
      */
-    fun getSeries(): Series? = Series.resolve(code)
+    fun getSeries() = Series.resolve(code)
 
     /**
      * 判断状态系列是否为信息性(1xx)系列。
-     *
      * @return 如果状态系列为信息性系列，则返回true；否则返回false。
      */
-    fun isInformational(): Boolean = getSeries() == Series.INFORMATIONAL
+    fun isInformational() = getSeries() == Series.INFORMATIONAL
 
     /**
      * 判断状态系列是否为成功(2xx)系列。
-     *
      * @return 如果状态系列为成功系列，则返回true；否则返回false。
      */
-    fun isSuccessful(): Boolean = getSeries() == Series.SUCCESSFUL
+    fun isSuccessful() = getSeries() == Series.SUCCESSFUL
 
     /**
      * 判断状态系列是否为重定向(3xx)系列。
-     *
      * @return 如果状态系列为重定向系列，则返回true；否则返回false。
      */
-    fun isRedirection(): Boolean = getSeries() == Series.REDIRECTION
+    fun isRedirection() = getSeries() == Series.REDIRECTION
 
     /**
      * 判断状态系列是否为客户端错误(4xx)系列。
-     *
      * @return 如果状态系列为客户端错误系列，则返回true；否则返回false。
      */
-    fun isClientError(): Boolean = getSeries() == Series.CLIENT_ERROR
+    fun isClientError() = getSeries() == Series.CLIENT_ERROR
 
     /**
      * 判断状态系列是否为服务器错误(5xx)系列。
-     *
      * @return 如果状态系列为服务器错误系列，则返回true；否则返回false。
      */
-    fun isServerError(): Boolean = getSeries() == Series.SERVER_ERROR
+    fun isServerError() = getSeries() == Series.SERVER_ERROR
 
     /**
      * 判断状态系列是否为错误系列（客户端错误或服务器错误）。
-     *
      * @return 如果状态系列为错误系列，则返回true；否则返回false。
      */
-    fun isError(): Boolean = isClientError() || isServerError()
+    fun isError() = isClientError() || isServerError()
+
 }

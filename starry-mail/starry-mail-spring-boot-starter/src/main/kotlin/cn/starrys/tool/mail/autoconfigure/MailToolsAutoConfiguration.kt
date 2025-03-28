@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean
 @AutoConfiguration
 @ConditionalOnMissingBean(MailTools::class)
 @EnableConfigurationProperties(MailProperties::class)
-open class MailToolsAutoConfiguration {
+class MailToolsAutoConfiguration {
 
     /**
      * 创建邮件工具加入ioc容器
@@ -27,7 +27,7 @@ open class MailToolsAutoConfiguration {
         prefix = MailProperties.PROPERTIES_PREFIX,
         name = ["host", "port", "from", "password"]
     )
-    open fun createMailTools(properties: MailProperties): MailTools {
+    fun createMailTools(properties: MailProperties): MailTools {
         return MailTools(
             MailProps(
                 properties.host,
