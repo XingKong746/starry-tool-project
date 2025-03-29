@@ -99,7 +99,7 @@ starry-tool
       <dependency>
           <groupId>cn.starrys.tool</groupId>
           <artifactId>starry-core</artifactId>
-          <version>0.1.0</version>
+          <version>0.2.0</version>
       </dependency>
       ```
 
@@ -113,39 +113,41 @@ starry-tool
 
    ```java
    public class Demo {
-       /**
-        * <pre>
-        * {
-        *   "code": 200,
-        *   "message": "成功",
-        *   "data": {
-        *     "username": "用户名0",
-        *     "password": "密码0",
-        *     "roles": [
-        *       {
-        *         "roleDescription": "角色描述0",
-        *         "roleName": "角色0",
-        *         "permissions": [
-        *           {
-        *             "permissionName": "权限0",
-        *             "permissionDescription": "权限描述0"
-        *           },
-        *           {
-        *             "permissionName": "权限1",
-        *             "permissionDescription": "权限描述1"
-        *           }
-        *         ]
-        *       }
-        *     ]
-        *   }
-        * }
-        * </pre>
-        */
-       static String json = "{\"code\":200,\"message\":\"成功\",\"data\":{\"username\":\"用户名0\",\"password\":\"密码0\",\"roles\":[{\"roleDescription\":\"角色描述0\",\"roleName\":\"角色0\",\"permissions\":[{\"permissionName\":\"权限0\",\"permissionDescription\":\"权限描述0\"},{\"permissionName\":\"权限1\",\"permissionDescription\":\"权限描述1\"}]}]}}";
+       record Permission(
+               String permissionName,
+               String permissionDescription
+       ) {
+       }
+   
+       static String json = """
+               {
+                 "code": 200,
+                 "message": "成功",
+                 "data": {
+                   "username": "用户名0",
+                   "password": "密码0",
+                   "roles": [
+                     {
+                       "roleDescription": "角色描述0",
+                       "roleName": "角色0",
+                       "permissions": [
+                         {
+                           "permissionName": "权限0",
+                           "permissionDescription": "权限描述0"
+                         },
+                         {
+                           "permissionName": "权限1",
+                           "permissionDescription": "权限描述1"
+                         }
+                       ]
+                     }
+                   ]
+                 }
+               }""";
+   
        public static void main(String[] args) {
-           Map value = JsonTools.getValue(json, "data.roles[0].permissions[1]", Map.class);
-           System.out.println(value.get("permissionName"));
+           Permission permission = JsonUtils.parse(json, "data.roles[0].permissions[1]", Permission.class);
+           System.out.println(permission.permissionDescription());
        }
    }
    ```
-
