@@ -23,16 +23,15 @@ object JsonUtils {
     }
 
     /**
-     * 获取Json串中指定节点的值。<br></br>
-     * FastJson2 实现
+     * 解析Json串中指定节点的值。
      * @param jsonStr Json 字符串
      * @param keyPath 节点路径
-     * @param type    转换类型
-     * @param <T>     返回类型
+     * @param type 转换类型
+     * @param T 返回类型
      * @return 指定类型的值
-    </T> */
+     */
     @JvmStatic
-    fun <T> getValue(jsonStr: String, keyPath: String, type: Class<T>?): T? {
+    fun <T> parse(jsonStr: String, keyPath: String, type: Class<T>?): T? {
         var currentJson: String = jsonStr
         // 节点数组
         val keys = split(keyPath)
@@ -40,7 +39,7 @@ object JsonUtils {
         // 遍历节点数组获得节点
         for (key in keys) {
             // Json 对象
-            val jsonObject = JSON.parseObject(jsonStr)
+            val jsonObject = JSON.parseObject(currentJson)
 
             val begin = key.indexOf('[')
             val end = key.lastIndexOf(']')
